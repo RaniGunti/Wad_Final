@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivational Testimonials</title>
+    <style>
+        body {
+            font-family: Lucida,Cursive;
+            margin: 0;
+            padding: 0;
+            background-color: #e7f3fe;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            text-align: center;
+        }
+        h1 {
+            color: #e55f8c;
+            margin-bottom: 30px; /* Increased margin for more space */
+            font-size: 2.5em; /* Larger font size */
+        }
+        .testimonial-form {
+            margin-bottom: 30px; /* Increased margin */
+        }
+        .testimonial-form input {
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 300px; /* Increased width */
+            max-width: 100%; /* Responsive input */
+            font-size: 1.2em; /* Larger font size */
+        }
+        .testimonial-form button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            background-color: #fda085;
+            color: white;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 1.2em; /* Larger font size */
+            transition: background-color 0.3s;
+        }
+        .testimonial-form button:hover {
+            background-color: #ff8c42; /* Darker shade on hover */
+        }
+        .testimonial {
+            background: rgb(144, 211, 228); /* Slightly transparent background */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 30px; /* Increased padding */
+            margin: 10px auto;
+            width: 90%; /* Expanded width */
+            max-width: 600px; /* Increased max width */
+            font-size: 1.5em; /* Larger font size */
+            color: #282626;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Increased shadow */
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1>Personalized Testimonials</h1>
+
+        <div class="testimonial-form">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <button onclick="generateTestimonial()">Get Your Testimonial</button>
+        </div>
+
+        <div id="testimonialOutput" class="testimonial"></div>
+    </div>
+
+    <script>
+        const testimonials = [
+            "You are capable of achieving amazing things!",
+            "Believe in yourself; you are stronger than you think.",
+            "Every day is a new opportunity to shine.",
+            "Your kindness makes the world a better place.",
+            "Keep going, you're doing great!",
+            "You have the power to create your own happiness.",
+            "Remember, your potential is limitless!",
+            "You have the strength to overcome any challenge that comes your way!",
+            "Every setback is a setup for a comeback—keep pushing forward!",
+            "Your unique talents and abilities are a gift to the world. Share them!",
+            "Believe in your dreams; they were given to you for a reason.",
+            "You are not defined by your past, but by how you rise from it.",
+            "Your potential is endless. Embrace it and watch yourself soar!",
+            "Remember, every great achievement started with a decision to try.",
+            "You are capable of more than you can imagine—keep striving!",
+            "Your journey is uniquely yours; trust the process and enjoy the ride.",
+            
+        ];
+
+        function generateTestimonial() {
+            const nameInput = document.getElementById('name');
+            const outputDiv = document.getElementById('testimonialOutput');
+
+            if (nameInput.value) {
+                const randomIndex = Math.floor(Math.random() * testimonials.length);
+                const selectedTestimonial = testimonials[randomIndex];
+                outputDiv.innerHTML = `<strong>${nameInput.value}</strong>, ${selectedTestimonial}`;
+
+                // Clear the input field
+                nameInput.value = '';
+            } else {
+                alert("Please enter your name.");
+            }
+        }
+      /* give testimonial code for storing */  
+    document.getElementById('testimonial-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const testimonialInput = document.getElementById('testimonial');
+        const testimonialText = testimonialInput.value;
+
+        if (testimonialText) {
+            // Send testimonial to backend
+            fetch('http://localhost:3000/api/testimonials', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ testimonial: testimonialText }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    console.log(data.message);
+                    testimonialInput.value = '';
+                    fetchTestimonials(); // Fetch updated testimonials
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+
+  </script>
+
+</body>
+</html>
